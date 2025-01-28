@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #ff0000; /* Red text */
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+}
+
+.landing-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.typewriter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 1s ease;
+  border-right: none; /* Remove default cursor */
+}
+
+.typewriter.active {
+  opacity: 1;
+  border-right: 0.15em solid red; /* Cursor effect only when active */
+}
+
+.photos-container {
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 1s ease, transform 1s ease;
+  position: absolute;
+  top: 42%; /* Adjusted to avoid overlap */
+  left: 50%;
+  display: flex;
+  gap: 40px;
+  padding-top: 100px;
+}
+
+.photos-container.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.polaroid {
+  opacity: 0;
+  transform: translateY(100vh);
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --rotation: -5deg;
+  margin: 0 20px;
+  will-change: transform;
+  background: white;
+  padding: 10px 10px 40px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.polaroid.visible {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--rotation));
+}
+
+.polaroid.tilt-left { --rotation: -8deg; }
+.polaroid.tilt-center { --rotation: 2deg; }
+.polaroid.tilt-right { --rotation: 8deg; }
+
+.polaroid img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.caption {
+  font-family: 'Caveat', cursive; /* Handwritten font */
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: black; /* Black text for captions */
+  text-decoration: none; /* Remove underline */
+}
+
+#typewriter-text-2 {
+  top: 70%; /* Position below photos */
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .typewriter {
+      font-size: 1.5rem;
+  }
+
+  .polaroid img {
+      width: 100px;
+      height: 100px;
+  }
+
+  .caption {
+      font-size: 1rem;
+  }
+}

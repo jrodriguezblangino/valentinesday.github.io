@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Player</title>
+</head>
+<body>
+    <audio id="background-music" src="./assets/sounds/Yo tengo un pecado nuevo.mp3" loop></audio>
+    <script>
+        const music = document.getElementById('background-music');
+        
+        // Restaurar el tiempo de reproducción guardado
+        const savedTime = localStorage.getItem('musicTime');
+        if (savedTime) {
+            music.currentTime = parseFloat(savedTime);
+        }
+
+        // Guardar el tiempo de reproducción cada segundo
+        setInterval(() => {
+            if (!music.paused) {
+                localStorage.setItem('musicTime', music.currentTime);
+            }
+        }, 1000);
+
+        // Manejar mensajes desde la página principal
+        window.addEventListener('message', function(e) {
+            if (e.data === 'play' && music.paused) {
+                music.play();
+            }
+        });
+
+        // Reproducir automáticamente si ya estaba sonando
+        if (localStorage.getItem('musicPlaying') === 'true') {
+            music.play();
+        }
+
+        // Actualizar el estado de reproducción
+        music.addEventListener('play', () => {
+            localStorage.setItem('musicPlaying', 'true');
+        });
+
+        music.addEventListener('pause', () => {
+            localStorage.setItem('musicPlaying', 'false');
+        });
+    </script>
+</body>
+</html> 

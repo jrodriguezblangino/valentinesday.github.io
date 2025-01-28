@@ -1,0 +1,81 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Add cursor to html and body elements */
+html, body {
+    cursor: url('./assets/custom-cursor.png'), auto;
+}
+
+/* Update heart cursor */
+.heart {
+    cursor: url('./assets/tap.png'), pointer;
+}
+
+/* Keep existing other CSS rules */
+body {
+    background-color: #000;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.heart-container {
+    position: relative;
+}
+
+.heart {
+    width: 100px;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    cursor: url('./assets/tap.png'), pointer;
+}
+
+.fire-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    display: none;
+    pointer-events: none;
+}
+
+.text-container {
+    margin-top: 30px;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade-text {
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.5em;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    min-height: 60px;
+}
+
+.clickable {
+    cursor: url('./assets/tap.png'), pointer !important;
+    transition: transform 0.3s ease;
+}
+
+.clickable:hover {
+    transform: scale(1.1);
+}
+
+/* Initial fade-in animation */
+@keyframes initialFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
