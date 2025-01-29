@@ -5,7 +5,10 @@ body {
   font-family: 'Raleway', sans-serif;
   text-align: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+  background-image: url('./assets/comic/homepage.background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .landing-page {
