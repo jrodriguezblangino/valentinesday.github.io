@@ -1,5 +1,5 @@
-import Player  from "./player.js";
-import Ghost  from "./ghost.js";
+import Player from "./assets/js/player.js";
+import Ghost from "./assets/js/ghost.js";
         
 let width = 800;
 let height = 625;
