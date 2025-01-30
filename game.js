@@ -194,8 +194,12 @@ function create ()
     this.physics.add.overlap(player.sprite, pills, function(sprite, pill) {        
         pill.disableBody(true, true);
         pillsAte++;
-        player.score+=10;
-        if(pillsCount==pillsAte) {
+        player.score += 10;
+        scoreText.setText('Score: ' + player.score);
+        
+        checkWinCondition.call(this);
+        
+        if(pillsCount == pillsAte) {
             reset();
         }
     }, null, this);
@@ -217,6 +221,12 @@ function create ()
     this.add.text(630, 595, 'Lives:').setFontFamily('Arial').setFontSize(18).setColor('#ffffff');
     for (let i =  0; i < player.life; i++) {
         livesImage.push(this.add.image(700 + (i * 25), 605, 'lifecounter'));
+    }
+
+    function checkWinCondition() {
+        if (player.score >= 1760) {
+            showWinMessage.call(this);
+        }
     }
 }
 
@@ -387,6 +397,51 @@ function showGameOver() {
 }
 
 function hideGameOver() {
+    if (gameOverText) {
+        gameOverText.destroy();
+        gameOverText = null;
+    }
+    if (restartText) {
+        restartText.destroy();
+        restartText = null;
+    }
+}
+
+function showWinMessage() {
+    player.active = false;
+    player.playing = false;
+
+    // Detener fantasmas
+    for (let ghost of ghosts) {
+        ghost.freeze();
+    }
+
+    gameOverText = this.add.text(width / 2, height / 2 - 50, 'Tu as gagné le jeu!', {
+        fontSize: '64px',
+        fill: '#00ff00',
+        align: 'center'
+    }).setOrigin(0.5);
+
+    restartText = this.add.text(width / 2, height / 2 + 80, 
+        'Mais pas seulement,\ntu as aussi gagné mon cœu ❤️', {
+        fontSize: '32px',
+        fill: '#ffffff',
+        align: 'center',
+        lineSpacing: 10
+    }).setOrigin(0.5).setInteractive();
+
+    restartText.on('pointerdown', () => {
+        hideWinMessage();
+        newGame.call(this);
+    });
+
+    this.input.keyboard.on('keydown-ENTER', () => {
+        hideWinMessage();
+        newGame.call(this);
+    });
+}
+
+function hideWinMessage() {
     if (gameOverText) {
         gameOverText.destroy();
         gameOverText = null;
