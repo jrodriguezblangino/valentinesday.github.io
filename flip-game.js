@@ -20,6 +20,32 @@ const cardsGrid = document.querySelector('.cards-grid');
 const scoreElement = document.getElementById('score');
 const winMessage = document.getElementById('win-message');
 
+function handleResize() {
+  const container = document.querySelector('.game-container');
+  const grid = document.querySelector('.cards-grid');
+  const cards = document.querySelectorAll('.card');
+  
+  // Update match effects positions when cards move
+  const updateEffectPositions = () => {
+    document.querySelectorAll('.match-effect').forEach(effect => {
+      const cardId = effect.dataset.cardId;
+      const card = document.querySelector(`[data-card-id="${cardId}"]`);
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        effect.style.left = `${rect.left}px`;
+        effect.style.top = `${rect.top}px`;
+      }
+    });
+  };
+
+  // Debounced resize handler
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(updateEffectPositions, 250);
+  });
+}
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -94,8 +120,8 @@ function handleMatch(card1, card2) {
   const effect2 = createMatchEffect(card2);
   
   setTimeout(() => {
-    card1.remove();
-    card2.remove();
+    card1.classList.add('matched');
+    card2.classList.add('matched');
     effect1.remove();
     effect2.remove();
     resetBoard();
@@ -106,12 +132,15 @@ function createMatchEffect(card) {
   const rect = card.getBoundingClientRect();
   const effect = document.createElement('div');
   effect.classList.add('match-effect');
-  effect.style.position = 'absolute';
-  effect.style.width = `${rect.width}px`;
-  effect.style.height = `${rect.height}px`;
+  const cardId = Date.now() + Math.random(); // Generate unique ID for tracking
+  
+  effect.dataset.cardId = cardId;
+  card.dataset.cardId = cardId;
+  
   effect.style.left = `${rect.left}px`;
   effect.style.top = `${rect.top}px`;
   effect.style.background = `url('./assets/cards/transparent-dance.gif') no-repeat center/cover`;
+  
   document.body.appendChild(effect);
   return effect;
 }
@@ -122,8 +151,8 @@ function resetBoard() {
 }
 
 function checkWin() {
-  const visibleCards = document.querySelectorAll('.card:not(.matched)');
-  if (visibleCards.length === 0) {
+  const matchedCards = document.querySelectorAll('.card.matched');
+  if (matchedCards.length === cardsData.length) {
     winMessage.style.display = 'block';
   }
 }
@@ -136,7 +165,16 @@ function restartGame() {
   createCards();
 }
 
+// Initialize game and event handlers
 createCards();
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('click', () => flipCard(card));
-});
+handleResize();
+
+// Improve scroll handling for mobile
+document.querySelector('.cards-container').addEventListener('touchstart', function(e) {
+  if (e.touches.length === 1) {
+    e.stopPropagation();
+  }
+}, { passive: true });
+
+// Handle window resize
+window.addEventListener('resize', handleResize);

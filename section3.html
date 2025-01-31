@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- <iframe id="music-player" src="music.html" style="display: none;"></iframe> -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Flip Cards Game</title>
   <link rel="stylesheet" href="flip-game.css">
-  <link href="https://fonts.googleapis.com/css2?family=Urban+Jungle&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="game-container">
     <div class="game-header">
-      <div class="player-name">Player Name: Lele</div>
-      <div class="score">Score: <span id="score">0</span></div>
+      <div class="player-info">
+        <div class="player-name">Player: Lele</div>
+      </div>
+      <div class="player-info">
+        <div class="score">Score: <span id="score">0</span></div>
+      </div>
     </div>
-    <div class="cards-grid"></div>
-    <div id="win-message" class="win-message">Felicitaciones. Ganaste mi bebecita bb</div>
+    <div class="cards-container">
+      <div class="cards-grid"></div>
+      <!-- Los controles de zoom se agregarán dinámicamente aquí -->
+    </div>
+    <div id="win-message" class="win-message">¡Felicitaciones! ¡Ganaste mi bebecita bb!</div>
   </div>
   <script src="flip-game.js"></script>
 </body>
