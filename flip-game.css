@@ -67,7 +67,7 @@ body {
 .cards-grid {
   display: grid;
   gap: calc(var(--grid-gap) * var(--zoom-level));
-  grid-template-columns: repeat(4, calc(var(--base-card-size) * var(--zoom-level)));
+  grid-template-columns: repeat(5, calc(var(--base-card-size) * var(--zoom-level)));
   justify-content: center;
   transform-origin: center;
   min-height: min-content;
@@ -180,6 +180,7 @@ body {
   z-index: 10;
   pointer-events: none;
   animation: effectAnimation 3s ease forwards;
+  transform: translate(-15px, -20px);
 }
 
 /* Win Message */
@@ -191,48 +192,171 @@ body {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   color: #ff4081;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  animation: textAnimation 1.5s infinite alternate;
   text-align: center;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
+  padding: clamp(20px, 4vw, 40px);
+  background: #c1daed;
+  border-radius: 15px;
+  border: 3px solid #ff4081;
+  box-shadow: 0 0 20px rgba(255, 64, 129, 0.3);
   z-index: 1000;
-  display: none;
+  display: none; /* Comienza oculto */
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  animation: winMessageAppear 0.5s ease-out forwards;
+}
+
+.win-message img {
+  width: clamp(150px, 30vw, 300px);
+  height: auto;
+  border-radius: 10px;
+  margin-left: -45px;  /* valor negativo mueve a la izquierda */
+  margin-top: -30px;   /* valor negativo mueve hacia arriba */
+}
+
+/* Aseguramos que cuando tenga la clase 'show', use display: flex */
+.win-message.show {
+  display: flex !important;
 }
 
 /* Animations */
 @keyframes effectAnimation {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.2); }
+  0% { 
+    opacity: 1; 
+    transform: translate(-15px, -20px) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translate(-15px, -20px) scale(1.2); 
+  }
+}
+
+@keyframes winMessageAppear {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.8); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1); 
+  }
 }
 
 @keyframes textAnimation {
-  0% { transform: translate(-50%, -50%) scale(1); }
-  100% { transform: translate(-50%, -50%) scale(1.1); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  :root {
+    --base-card-size: 100px;
+    --grid-gap: 12px;
+  }
+  
   .cards-grid {
-    grid-template-columns: repeat(auto-fit, calc(var(--base-card-size) * var(--zoom-level)));
-    gap: calc(10px * var(--zoom-level));
+    grid-template-columns: repeat(auto-fit, minmax(calc(var(--base-card-size) * var(--zoom-level)), 1fr));
   }
 }
 
-@media (max-width: 480px) {
-  .cards-grid {
-    grid-template-columns: repeat(auto-fit, calc(var(--base-card-size) * var(--zoom-level)));
-    gap: calc(8px * var(--zoom-level));
+@media (max-width: 768px) {
+  :root {
+    --base-card-size: 80px;
+    --grid-gap: 10px;
+  }
+
+  .game-container {
+    width: 98vw;
+    height: 98vh;
+    padding: 10px;
+    padding-top: 15%;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 20px 0;    /* Añadimos padding vertical al body */
+    display: flex;
+    align-items: center; /* Aseguramos el centrado vertical */
+    justify-content: center;
+  }
+
+  .cards-container {
+    padding: 10px;
+  }
+
+  .win-message {
+    width: 90vw;
+    max-width: 400px;
   }
 
   .game-header {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: center;    /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    width: 100%;           /* Asegura que tome todo el ancho disponible */
+    gap: 10px;            /* Espacio entre los elementos */
+  }
+
+  .player-info {
+    width: auto;          /* Ancho automático basado en el contenido */
+    min-width: 150px;     /* Ancho mínimo para mantener consistencia */
+    text-align: center;   /* Centra el texto dentro de player-info */
+  }
+
+}
+
+@media (max-width: 480px) {
+  :root {
+    --base-card-size: 60px;
+    --grid-gap: 8px;
+  }
+
+  .game-header {
+    font-size: 0.9rem;
+    padding: 10px 5px 15% 5px;
+  }
+
+  body {
+    padding: 30px 0;    /* Aumentamos el padding vertical para más espacio */
+  }
+  
+  
+
+  .player-info {
+    font-size: 0.8rem;   /* Reduce el tamaño de fuente si es necesario */
+    min-width: 120px;    /* Ajusta el ancho mínimo para pantallas más pequeñas */
+    padding: 5px 10px;   /* Reduce el padding */
   }
 
   .zoom-controls {
-    bottom: 10px;
-    right: 10px;
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .win-message {
+    font-size: clamp(1rem, 5vw, 1.5rem);
+    padding: 15px;
+  }
+}
+
+/* Portrait mode adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  :root {
+    --base-card-size: 50px;
+  }
+
+  .game-container {
+    height: 98vh;
+  }
+
+
+  body {
+    padding: 15px 0;    /* Menor padding en modo paisaje */
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(calc(var(--base-card-size) * var(--zoom-level)), 1fr));
+    gap: 8px;
   }
 }

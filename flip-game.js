@@ -125,6 +125,7 @@ function handleMatch(card1, card2) {
     effect1.remove();
     effect2.remove();
     resetBoard();
+    checkWin();
   }, 2000);
 }
 
@@ -153,15 +154,26 @@ function resetBoard() {
 function checkWin() {
   const matchedCards = document.querySelectorAll('.card.matched');
   if (matchedCards.length === cardsData.length) {
-    winMessage.style.display = 'block';
+    // Aseguramos que el winMessage exista
+    const winMessage = document.getElementById('win-message');
+    if (winMessage) {
+      // Añadimos la clase show en lugar de modificar el style directamente
+      winMessage.classList.add('show');
+      // Opcional: Añadir un log para debugging
+      console.log('Win condition met! Showing win message');
+    }
   }
 }
 
+// También modificamos la función restartGame para ocultar el mensaje correctamente
 function restartGame() {
   cardsGrid.innerHTML = '';
   score = 0;
   scoreElement.textContent = score;
-  winMessage.style.display = 'none';
+  const winMessage = document.getElementById('win-message');
+  if (winMessage) {
+    winMessage.classList.remove('show');
+  }
   createCards();
 }
 
