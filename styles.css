@@ -12,7 +12,7 @@ body {
   color: var(--text-color);
   font-family: 'Raleway', sans-serif;
   text-align: center;
-  overflow-x: hidden;
+  overflow: hidden;
   background-image: url('./assets/comic/homepage.background.jpg');
   background-size: cover;
   background-position: center;
@@ -34,11 +34,13 @@ body::before {
 .landing-page {
   position: relative;
   min-height: 100vh;
+  height: 100vh;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .typewriter {
@@ -163,6 +165,8 @@ body::before {
   .landing-page {
     justify-content: space-between;
     padding: 40px 20px;
+    height: auto;
+    min-height: 100vh;
   }
 
   #typewriter-text {

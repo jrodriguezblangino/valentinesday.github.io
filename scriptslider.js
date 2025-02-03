@@ -9,6 +9,14 @@ const nextBtn = document.getElementById('next-btn');
 const startButton = document.getElementById('start-button');
 const restartButton = document.getElementById('restart-button');
 
+// Resetear al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+  currentSlide = 0;
+  comicSlides.style.transform = 'translateX(0)';
+  endScreen.classList.add('hidden');
+  startScreen.classList.remove('hidden');
+});
+
 // Start the story
 startButton.addEventListener('click', () => {
   startScreen.classList.add('hidden');

@@ -77,3 +77,11 @@ async function animatePage() {
 
 // Start animation when page loads
 window.addEventListener('load', animatePage);
+
+// Después de que terminen todas las animaciones
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.body.style.overflowY = 'auto';
+    document.documentElement.style.overflowY = 'auto';
+  }, 1000); // Ajusta este tiempo según la duración de tus animaciones
+});
