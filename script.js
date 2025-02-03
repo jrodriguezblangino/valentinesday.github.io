@@ -66,6 +66,12 @@ async function animatePage() {
     enterSound.play();
     await new Promise(r => setTimeout(r, enterSound.duration * 1000));
     
+    // Iniciar música
+    const musicPlayer = document.getElementById('music-player');
+    if (musicPlayer) {
+        musicPlayer.contentWindow.postMessage('play', '*');
+    }
+    
     // Add continuous subtle animation to polaroids
     setInterval(() => {
         polaroids.forEach(polaroid => {
