@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
             heart.style.opacity = '0';
             fire.style.display = 'block';
             
+            // Agregar efecto de sonido
+            const explosionSound = new Audio('./assets/sounds/cinematic-boom-171285.mp3');
+            explosionSound.volume = 0.3; // Ajustar volumen
+            explosionSound.play();
+
             await new Promise(resolve => setTimeout(resolve, 1500));
             fire.style.display = 'none';
             
