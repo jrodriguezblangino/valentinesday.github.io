@@ -247,3 +247,118 @@ body {
     transform: translateY(-3px);
     box-shadow: 8px 8px 0 #000;
 }
+
+/* Breakpoint tablet (768px) */
+@media (max-width: 768px) {
+  #start-screen h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 0 #000;
+  }
+
+  #start-screen p {
+    font-size: 1.4rem;
+  }
+
+  #start-button {
+    font-size: 1.2rem;
+    padding: 12px 25px;
+  }
+
+  .comic-heart {
+    width: 80px;
+    top: 15px;
+    right: 15px;
+  }
+
+  .comic-explosion {
+    width: 120px;
+    bottom: 15px;
+    left: 15px;
+  }
+}
+
+/* Breakpoint móvil medio (480px) */
+@media (max-width: 480px) {
+  #start-screen h1 {
+    font-size: 2.2rem;
+    text-shadow: 1.5px 1.5px 0 #000;
+  }
+
+  #start-screen p {
+    font-size: 1.1rem;
+  }
+
+  #start-button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    box-shadow: 3px 3px 0 #000;
+  }
+
+  .comic-heart {
+    width: 60px;
+    animation: float 2.5s infinite ease-in-out;
+  }
+
+  .comic-explosion {
+    width: 90px;
+    animation: rotate 3.5s infinite linear;
+  }
+}
+
+/* Breakpoint móvil pequeño (360px) */
+@media (max-width: 360px) {
+  #start-screen h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  #start-screen p {
+    font-size: 1rem;
+    margin: 8px 0;
+  }
+
+  #start-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-width: 2px;
+  }
+
+  .comic-heart {
+    width: 50px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .comic-explosion {
+    width: 70px;
+    bottom: 10px;
+    left: 10px;
+  }
+}
+
+/* Ajuste para orientación horizontal */
+@media (max-width: 480px) and (orientation: landscape) {
+  #start-screen {
+    padding: 20px;
+  }
+  
+  #start-screen h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #start-screen p {
+    font-size: 0.9rem;
+    margin: 5px 0;
+  }
+
+  #start-button {
+    margin-top: 10px;
+    padding: 6px 12px;
+  }
+
+  .comic-heart,
+  .comic-explosion {
+    display: none; /* Ocultar elementos decorativos en horizontal */
+  }
+}

@@ -1,38 +1,72 @@
+:root {
+  --primary-color: #ff4d6d;
+  --secondary-color: #c9184a;
+  --text-color: #590d22;
+  --background-overlay: rgba(255, 255, 255, 0.95);
+  --shadow-color: rgba(89, 13, 34, 0.15);
+}
+
 body {
   margin: 0;
   padding: 0;
-  color: #ff0000; /* Red text */
+  color: var(--text-color);
   font-family: 'Raleway', sans-serif;
   text-align: center;
-  overflow: hidden;
+  overflow-x: hidden;
   background-image: url('./assets/comic/homepage.background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--background-overlay), transparent);
+  z-index: -1;
 }
 
 .landing-page {
   position: relative;
   min-height: 100vh;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .typewriter {
   position: absolute;
   left: 50%;
-  top: 50%;
   transform: translate(-50%, -50%);
   font-size: 2.5rem;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   opacity: 0;
-  transition: all 1s ease;
-  border-right: none; /* Remove default cursor */
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 2px 2px 4px var(--shadow-color);
+}
+
+#typewriter-text {
+  top: 50%;
+}
+
+#typewriter-text-2 {
+  top: 70%;
+  font-size: 2rem;
+  font-weight: 500;
 }
 
 .typewriter.active {
   opacity: 1;
-  border-right: 0.15em solid red; /* Cursor effect only when active */
+  border-right: 0.15em solid var(--primary-color);
 }
 
 .photos-container {
@@ -40,11 +74,13 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 1s ease, transform 1s ease;
   position: absolute;
-  top: 42%; /* Adjusted to avoid overlap */
+  top: 50%;
   left: 50%;
   display: flex;
   gap: 40px;
-  padding-top: 100px;
+  width: auto;
+  max-width: 90%;
+  justify-content: center;
 }
 
 .photos-container.visible {
@@ -64,14 +100,19 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.polaroid.tilt-left { --rotation: -8deg; }
+.polaroid.tilt-center { --rotation: 2deg; }
+.polaroid.tilt-right { --rotation: 8deg; }
+
 .polaroid.visible {
   opacity: 1;
   transform: translateY(0) rotate(var(--rotation));
 }
 
-.polaroid.tilt-left { --rotation: -8deg; }
-.polaroid.tilt-center { --rotation: 2deg; }
-.polaroid.tilt-right { --rotation: 8deg; }
+.polaroid:hover {
+  transform: translateY(-10px) rotate(var(--rotation)) scale(1.02);
+  box-shadow: 0 12px 24px var(--shadow-color);
+}
 
 .polaroid img {
   width: 150px;
@@ -80,24 +121,32 @@ body {
 }
 
 .caption {
-  font-family: 'Caveat', cursive; /* Handwritten font */
+  font-family: 'Caveat', cursive;
   font-size: 1.2rem;
   margin-top: 10px;
-  color: black; /* Black text for captions */
-  text-decoration: none; /* Remove underline */
-}
-
-#typewriter-text-2 {
-  top: 70%; /* Position below photos */
-  left: 50%;
-  transform: translate(-50%, 0);
-  font-size: 2rem;
-  font-weight: 500;
+  color: black;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
   .typewriter {
       font-size: 1.5rem;
+  }
+
+  #typewriter-text-2 {
+      font-size: 1.3rem;
+  }
+
+  .photos-container {
+      top: 50%;
+      gap: 20px;
+      overflow-x: auto;
+      padding: 0 20px;
+  }
+  
+  .polaroid {
+      margin: 0 10px;
+      flex-shrink: 0;
   }
 
   .polaroid img {
@@ -107,5 +156,74 @@ body {
 
   .caption {
       font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-page {
+    justify-content: space-between;
+    padding: 40px 20px;
+  }
+
+  #typewriter-text {
+    top: 48%;
+  }
+
+  #typewriter-text-2 {
+    top: 65%;
+    font-size: 1.2rem;
+  }
+
+  .photos-container {
+    width: 100vw;
+    max-width: calc(100vw - 40px);
+    padding: 20px 10px;
+    gap: 15px;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+  }
+  
+  .polaroid {
+    margin: 0 5px;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    transform-origin: center;
+    padding: 8px 8px 30px 8px;
+  }
+
+  .polaroid img {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+  }
+}
+
+/* Nuevo breakpoint para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .photos-container {
+    max-width: calc(100vw - 30px); /* Reducción adicional de 10px */
+    gap: 10px; /* Menor espacio entre fotos */
+    padding: 20px 5px; /* Padding horizontal mínimo */
+  }
+
+  .polaroid {
+    margin: 0 3px; /* Margen lateral reducido */
+    padding: 6px 6px 25px 6px; /* Padding interno ajustado */
+  }
+
+  .polaroid img {
+    width: 70px; /* Reducción adicional de 12.5% */
+    height: 70px; /* Mantener relación 1:1 */
+    min-width: 70px; /* Prevenir compresión */
+  }
+
+  #typewriter-text {
+    top: 44%; /* Mayor ajuste vertical */
+    font-size: 1.3rem; /* Tamaño reducido para pantallas muy pequeñas */
+  }
+
+  #typewriter-text-2 {
+    margin: 0 3%; /* Margen más ajustado */
+    font-size: 1rem; /* Tamaño consistente con otros breakpoints */
   }
 }

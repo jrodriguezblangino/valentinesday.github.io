@@ -15,3 +15,165 @@ body {
     position: relative;
     z-index: 1;
 }
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+    height: auto;
+    min-height: 100vh;
+    justify-content: flex-start; /* Mejor alineación vertical */
+  }
+
+  #game-container {
+    transform: scale(0.85); /* Ajuste más preciso */
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 500px; /* Límite máximo para mantener proporciones */
+  }
+
+  .game-character {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  .platform {
+    height: 20px !important;
+    margin: 0.5rem 0; /* Espaciado vertical adicional */
+  }
+}
+
+@media (max-width: 480px) {
+  #game-container {
+    transform: scale(0.75);
+    margin: 0.5rem 0;
+    padding: 10px;
+  }
+
+  body {
+    background-size: 150% auto; /* Mejor adaptación del fondo */
+    justify-content: center;
+  }
+
+  .game-ui {
+    gap: 10px;
+    padding: 8px;
+    font-size: 0.9rem; /* Tamaño texto uniforme */
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  #game-container {
+    transform: scale(0.65);
+    margin: 0;
+    padding: 5px;
+  }
+
+  .game-controls button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    margin: 0 2px;
+    min-width: 60px; /* Ancho mínimo para legibilidad */
+  }
+
+  .power-up {
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  .game-dialog {
+    width: 95vw !important;
+    padding: 10px;
+    font-size: 0.9rem; /* Texto más compacto */
+  }
+
+  /* Nuevo: Ajuste para modo retrato */
+  @media (orientation: portrait) {
+    #game-container {
+      transform: scale(0.7) translateY(-5%);
+    }
+  }
+}
+
+/* Breakpoint tablet/móvil grande (coherente con styles.css) */
+@media (max-width: 768px) {
+  body {
+    background-size: 200% auto; /* Fondo más amplio */
+    background-position: 60% center; /* Enfoque en área importante */
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+  }
+
+  #game-container {
+    width: 90vw !important; /* Ancho relativo */
+    height: auto !important;
+    transform: scale(0.9) translate(-50%, -50%); /* Escalado controlado */
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    margin: 0;
+  }
+}
+
+/* Breakpoint móvil medio (480px - mismo que styles.css) */
+@media (max-width: 480px) {
+  body {
+    background-size: 250% auto;
+    background-position: 70% center;
+  }
+
+  #game-container {
+    width: 95vw !important;
+    transform: scale(0.8) translate(-50%, -50%);
+    padding: 5px;
+  }
+
+  /* Ajustes para controles táctiles */
+  .game-controls button {
+    min-width: 65px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Breakpoint móvil pequeño (360px - igual que styles.css) */
+@media (max-width: 360px) {
+  body {
+    background-size: 300% auto;
+    background-position: 75% center;
+  }
+
+  #game-container {
+    transform: scale(0.7) translate(-50%, -45%); /* Ajuste vertical fino */
+    width: 100vw !important;
+  }
+
+  /* Optimización de elementos de UI */
+  .game-ui {
+    padding: 5px;
+    gap: 8px;
+  }
+
+  .score-board {
+    font-size: 1rem;
+    padding: 4px 8px;
+  }
+}
+
+/* Ajuste especial para orientación horizontal */
+@media (max-width: 480px) and (orientation: landscape) {
+  #game-container {
+    transform: scale(0.65) translate(-50%, -50%);
+    top: 55%;
+  }
+  
+  body {
+    background-size: 180% auto;
+    background-position: 50% 30%;
+  }
+}
