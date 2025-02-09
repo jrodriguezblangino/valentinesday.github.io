@@ -75,6 +75,7 @@ let Animation= {
 
 let gameOverText;
 let restartText;
+let currentTouch = null;
 
 function preload ()
 {
@@ -83,6 +84,9 @@ function preload ()
     this.load.image(tiles, tilesPath);
     this.load.image("pill", "assets/images/pac man pill/spr_pill_0.png");
     this.load.image("lifecounter", "assets/images/pac man life counter/spr_lifecounter_0.png");
+    if (!this.game.device.os.desktop) {
+        this.load.image('arrow', 'assets/ui/arrow.png');
+    }
 }
 
 function create ()
@@ -213,7 +217,7 @@ function create ()
         }
     }, null, this);
 
-    cursors= this.input.keyboard.createCursorKeys();
+    cursors = this.input.keyboard.createCursorKeys();
 
     graphics = this.add.graphics();
 
@@ -223,11 +227,24 @@ function create ()
         livesImage.push(this.add.image(700 + (i * 25), 605, 'lifecounter'));
     }
 
+    this.controls = this.add.group();
+    if (!this.game.device.os.desktop) {
+        this.createTouchControls();
+    }
+
+    this.input.on('pointerdown', () => {
+        if (!this.game.device.os.desktop) return;
+        this.input.keyboard.enabled = true;
+        this.input.keyboard.setFocus();
+    });
+
     function checkWinCondition() {
         if (player.score >= 1760) {
             showWinMessage.call(this);
         }
     }
+
+    this.game.device.os.desktop = this.game.device.os.desktop || /Mac|Win/.test(navigator.platform);
 }
 
 function respawn() {
@@ -262,6 +279,27 @@ function newGame() {
 
 function update()
 {
+    // Sistema dual mejorado
+    let direction = Phaser.NONE;
+    
+    // Prioridad: teclado sobre touch
+    if (cursors.left.isDown) direction = Phaser.LEFT;
+    else if (cursors.right.isDown) direction = Phaser.RIGHT;
+    else if (cursors.up.isDown) direction = Phaser.UP;
+    else if (cursors.down.isDown) direction = Phaser.DOWN;
+    
+    // Si no hay input de teclado, usar touch
+    if (direction === Phaser.NONE) {
+        switch(currentTouch) {
+            case 180: direction = Phaser.LEFT; break;
+            case 0: direction = Phaser.RIGHT; break;
+            case -90: direction = Phaser.UP; break;
+            case 90: direction = Phaser.DOWN; break;
+        }
+    }
+    
+    player.setTurn(direction);
+
     player.setDirections(getDirection(map, layer1, player.sprite));
 
     if(!player.playing) {
@@ -278,27 +316,6 @@ function update()
 
     for(let ghost of ghosts) {
         ghost.setTurningPoint(getTurningPoint(map, ghost.sprite));
-    }
-
-    if (cursors.left.isDown)
-    {
-        player.setTurn(Phaser.LEFT);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setTurn(Phaser.RIGHT);
-    }   
-    else if (cursors.up.isDown)
-    {
-        player.setTurn(Phaser.UP);
-    }
-    else if (cursors.down.isDown)
-    {
-        player.setTurn(Phaser.DOWN);
-    }
-    else
-    {
-        player.setTurn(Phaser.NONE);   
     }
 
     player.update();  
@@ -324,9 +341,6 @@ function update()
             player.sprite.setPosition(0 - offset, player.sprite.y);
         }
     }
-    
-
-    //drawDebug();
 }
 
 function drawDebug() {
@@ -450,6 +464,41 @@ function hideWinMessage() {
         restartText.destroy();
         restartText = null;
     }
+}
+
+function createTouchControls() {
+    const controlSize = 50;
+    const padding = 20;
+    
+    // Grupo para controles
+    this.controls = this.add.group();
+    
+    // Crear flechas
+    const up = this.add.sprite(width - padding - controlSize, height - padding - controlSize*3, 'arrow')
+        .setInteractive()
+        .setAngle(-90)
+        .setScrollFactor(0);
+    
+    const down = this.add.sprite(width - padding - controlSize, height - padding + controlSize, 'arrow')
+        .setInteractive()
+        .setAngle(90)
+        .setScrollFactor(0);
+
+    const left = this.add.sprite(width - padding - controlSize*2, height - padding - controlSize, 'arrow')
+        .setInteractive()
+        .setAngle(180)
+        .setScrollFactor(0);
+
+    const right = this.add.sprite(width - padding, height - padding - controlSize, 'arrow')
+        .setInteractive()
+        .setAngle(0)
+        .setScrollFactor(0);
+
+    [up, down, left, right].forEach(btn => {
+        btn.on('pointerdown', () => currentTouch = btn.angle);
+        btn.on('pointerup', () => currentTouch = null);
+        this.controls.add(btn);
+    });
 }
 
       
