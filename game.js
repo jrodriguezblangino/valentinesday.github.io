@@ -485,23 +485,24 @@ function hideWinMessage() {
 
 function createTouchControls() {
     if (!this.game.device.os.desktop) {
-        const controlSize = 60;
-        const padding = 20;
+        const controlSize = 40;
+        const verticalPosition = height - 70;
         
-        this.controls = this.add.group();
-        
-        // Controles direccionales mejorados
-        const createButton = (x, y, angle, direction) => {
-            const btn = this.add.sprite(x, y, 'arrow')
-                .setInteractive()
-                .setScale(1.5)
-                .setAngle(angle)
-                .setAlpha(0.7)
-                .setScrollFactor(0);
-            
+        const createButton = (x, direction) => {
+            const btn = this.add.text(x, verticalPosition, getArrowSymbol(direction), {
+                fontSize: '24px',
+                fill: '#ffffff',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                padding: { x: 10, y: 5 },
+                borderRadius: 20
+            })
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(1000);
+
             btn.on('pointerdown', () => {
                 if (player.active) {
-                    currentTouch = angle;
+                    currentTouch = direction;
                     btn.setAlpha(0.9);
                     player.setTurn(direction);
                 }
@@ -520,12 +521,12 @@ function createTouchControls() {
             return btn;
         };
 
-        // Posicionamiento relativo a la pantalla
-        const baseY = height - controlSize * 1.5;
-        createButton(padding + controlSize, baseY, 180, Phaser.LEFT); // Izquierda
-        createButton(padding + controlSize * 3, baseY, 0, Phaser.RIGHT); // Derecha
-        createButton(padding + controlSize * 2, baseY - controlSize, -90, Phaser.UP); // Arriba
-        createButton(padding + controlSize * 2, baseY + controlSize, 90, Phaser.DOWN); // Abajo
+        // Posicionamiento horizontal centrado
+        const startX = width/2 - (controlSize * 2 + 15);
+        createButton(startX, Phaser.LEFT);
+        createButton(startX + controlSize + 15, Phaser.UP);
+        createButton(startX + (controlSize + 15) * 2, Phaser.DOWN);
+        createButton(startX + (controlSize + 15) * 3, Phaser.RIGHT);
 
         // Manejo de toques múltiples
         this.input.on('pointermove', (pointer) => {
@@ -539,6 +540,16 @@ function createTouchControls() {
             currentTouch = Math.round(touchAngle / 90) * 90;
         });
     }
+}
+
+// Función auxiliar para símbolos de flecha
+function getArrowSymbol(direction) {
+    return { 
+        [Phaser.LEFT]: '←', 
+        [Phaser.RIGHT]: '→', 
+        [Phaser.UP]: '↑', 
+        [Phaser.DOWN]: '↓' 
+    }[direction];
 }
 
       
