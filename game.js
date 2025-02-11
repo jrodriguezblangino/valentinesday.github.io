@@ -7,8 +7,9 @@ let gridSize = 32;
 let offset=parseInt(gridSize/2);
 let config = {
     type: Phaser.AUTO,
-    width: width,
-    height: height,
+    parent: 'game-container',
+    width: 800,
+    height: 625,
     physics: {
         default: 'arcade',
         arcade: {
@@ -245,6 +246,22 @@ function create ()
     }
 
     this.game.device.os.desktop = this.game.device.os.desktop || /Mac|Win/.test(navigator.platform);
+
+    // Escalado responsivo para Phaser 3.12
+    const resizeGame = () => {
+        const canvas = document.querySelector('canvas');
+        const container = document.getElementById('game-container');
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+        
+        const scale = Math.min(width / 800, height / 625);
+        canvas.style.width = `${800 * scale}px`;
+        canvas.style.height = `${625 * scale}px`;
+        canvas.style.margin = 'auto';
+    };
+    
+    window.addEventListener('resize', resizeGame);
+    resizeGame();
 }
 
 function respawn() {
@@ -467,38 +484,52 @@ function hideWinMessage() {
 }
 
 function createTouchControls() {
-    const controlSize = 50;
-    const padding = 20;
-    
-    // Grupo para controles
-    this.controls = this.add.group();
-    
-    // Crear flechas
-    const up = this.add.sprite(width - padding - controlSize, height - padding - controlSize*3, 'arrow')
-        .setInteractive()
-        .setAngle(-90)
-        .setScrollFactor(0);
-    
-    const down = this.add.sprite(width - padding - controlSize, height - padding + controlSize, 'arrow')
-        .setInteractive()
-        .setAngle(90)
-        .setScrollFactor(0);
+    if (!this.game.device.os.desktop) {
+        const controlSize = 60;
+        const padding = 20;
+        
+        this.controls = this.add.group();
+        
+        // Controles direccionales
+        const up = this.add.sprite(controlSize + padding, height - controlSize*2 - padding, 'arrow')
+            .setInteractive()
+            .setScale(1.5)
+            .setAngle(-90);
+        
+        const down = this.add.sprite(controlSize + padding, height - controlSize - padding, 'arrow')
+            .setInteractive()
+            .setScale(1.5)
+            .setAngle(90);
+        
+        const left = this.add.sprite(padding, height - controlSize - padding, 'arrow')
+            .setInteractive()
+            .setScale(1.5)
+            .setAngle(180);
+        
+        const right = this.add.sprite(controlSize*2 + padding, height - controlSize - padding, 'arrow')
+            .setInteractive()
+            .setScale(1.5);
 
-    const left = this.add.sprite(width - padding - controlSize*2, height - padding - controlSize, 'arrow')
-        .setInteractive()
-        .setAngle(180)
-        .setScrollFactor(0);
+        // Asignar eventos táctiles
+        const handleTouch = (direction) => {
+            return () => {
+                if (!player.active) return;
+                player.setTurn(direction);
+                player.move(direction);
+            };
+        };
 
-    const right = this.add.sprite(width - padding, height - padding - controlSize, 'arrow')
-        .setInteractive()
-        .setAngle(0)
-        .setScrollFactor(0);
+        up.on('pointerdown', handleTouch(Phaser.UP));
+        down.on('pointerdown', handleTouch(Phaser.DOWN));
+        left.on('pointerdown', handleTouch(Phaser.LEFT));
+        right.on('pointerdown', handleTouch(Phaser.RIGHT));
 
-    [up, down, left, right].forEach(btn => {
-        btn.on('pointerdown', () => currentTouch = btn.angle);
-        btn.on('pointerup', () => currentTouch = null);
-        this.controls.add(btn);
-    });
+        // Añadir feedback táctil
+        [up, down, left, right].forEach(btn => {
+            btn.on('pointerover', () => btn.setAlpha(0.8));
+            btn.on('pointerout', () => btn.setAlpha(1));
+        });
+    }
 }
 
       
