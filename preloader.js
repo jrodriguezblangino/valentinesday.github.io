@@ -43,8 +43,37 @@ document.addEventListener('DOMContentLoaded', () => {
             fadeText.textContent = 'Touch my heart again, like you did that time.';
             textContainer.style.opacity = '1';
         } else if (currentPhase === 2) {
-            // Solo redirigir al homepage
-            window.location.href = 'homepage.html';
+            // 1. Ocultar elementos primero
+            document.querySelectorAll('.heart-container, .text-container').forEach(element => {
+                element.style.display = 'none';
+            });
+
+            // Crear nuevo elemento video dinámicamente
+            const newVideo = document.createElement('video');
+            newVideo.src = './assets/Corazon.mp4';
+            newVideo.className = 'final-heart';
+            newVideo.style.width = '80%'; // Tamaño visible
+            newVideo.style.maxWidth = '400px'; // Límite máximo
+            newVideo.muted = true;
+            newVideo.autoplay = true;
+            newVideo.playsInline = true; // Necesario para iOS
+            document.body.appendChild(newVideo);
+
+            // Forzar layout y reproducción
+            newVideo.style.display = 'block';
+            newVideo.style.opacity = '1';
+
+            newVideo.play().then(() => {
+                console.log('Reproducción iniciada');
+                setTimeout(() => {
+                    newVideo.remove();
+                    window.location.href = 'homepage.html';
+                }, 24000);
+            }).catch(error => {
+                console.error('Error reproducción:', error);
+                // Fallback
+                setTimeout(() => window.location.href = 'homepage.html', 24000);
+            });
         }
     });
 });
