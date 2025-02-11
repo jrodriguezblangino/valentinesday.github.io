@@ -230,13 +230,16 @@ function create ()
 
     this.controls = this.add.group();
     if (!this.game.device.os.desktop) {
-        this.createTouchControls();
+        this.input.addPointer(3);
+        createTouchControls.call(this);
+        this.input.keyboard.enabled = false;
     }
 
     this.input.on('pointerdown', () => {
-        if (!this.game.device.os.desktop) return;
+        if (!this.game.device.os.desktop) {
+            return;
+        }
         this.input.keyboard.enabled = true;
-        this.input.keyboard.setFocus();
     });
 
     function checkWinCondition() {
@@ -296,25 +299,22 @@ function newGame() {
 
 function update()
 {
-    // Sistema dual mejorado
     let direction = Phaser.NONE;
-    
-    // Prioridad: teclado sobre touch
-    if (cursors.left.isDown) direction = Phaser.LEFT;
-    else if (cursors.right.isDown) direction = Phaser.RIGHT;
-    else if (cursors.up.isDown) direction = Phaser.UP;
-    else if (cursors.down.isDown) direction = Phaser.DOWN;
-    
-    // Si no hay input de teclado, usar touch
-    if (direction === Phaser.NONE) {
-        switch(currentTouch) {
-            case 180: direction = Phaser.LEFT; break;
-            case 0: direction = Phaser.RIGHT; break;
-            case -90: direction = Phaser.UP; break;
-            case 90: direction = Phaser.DOWN; break;
-        }
+
+    if (this.game.device.os.desktop) {
+        if (cursors.left.isDown) direction = Phaser.LEFT;
+        else if (cursors.right.isDown) direction = Phaser.RIGHT;
+        else if (cursors.up.isDown) direction = Phaser.UP;
+        else if (cursors.down.isDown) direction = Phaser.DOWN;
     }
-    
+
+    switch(currentTouch) {
+        case 180: direction = Phaser.LEFT; break;
+        case 0: direction = Phaser.RIGHT; break;
+        case -90: direction = Phaser.UP; break;
+        case 90: direction = Phaser.DOWN; break;
+    }
+
     player.setTurn(direction);
 
     player.setDirections(getDirection(map, layer1, player.sprite));
@@ -490,44 +490,53 @@ function createTouchControls() {
         
         this.controls = this.add.group();
         
-        // Controles direccionales
-        const up = this.add.sprite(controlSize + padding, height - controlSize*2 - padding, 'arrow')
-            .setInteractive()
-            .setScale(1.5)
-            .setAngle(-90);
-        
-        const down = this.add.sprite(controlSize + padding, height - controlSize - padding, 'arrow')
-            .setInteractive()
-            .setScale(1.5)
-            .setAngle(90);
-        
-        const left = this.add.sprite(padding, height - controlSize - padding, 'arrow')
-            .setInteractive()
-            .setScale(1.5)
-            .setAngle(180);
-        
-        const right = this.add.sprite(controlSize*2 + padding, height - controlSize - padding, 'arrow')
-            .setInteractive()
-            .setScale(1.5);
-
-        // Asignar eventos táctiles
-        const handleTouch = (direction) => {
-            return () => {
-                if (!player.active) return;
-                player.setTurn(direction);
-                player.move(direction);
-            };
+        // Controles direccionales mejorados
+        const createButton = (x, y, angle, direction) => {
+            const btn = this.add.sprite(x, y, 'arrow')
+                .setInteractive()
+                .setScale(1.5)
+                .setAngle(angle)
+                .setAlpha(0.7)
+                .setScrollFactor(0);
+            
+            btn.on('pointerdown', () => {
+                if (player.active) {
+                    currentTouch = angle;
+                    btn.setAlpha(0.9);
+                    player.setTurn(direction);
+                }
+            });
+            
+            btn.on('pointerup', () => {
+                currentTouch = null;
+                btn.setAlpha(0.7);
+            });
+            
+            btn.on('pointerout', () => {
+                currentTouch = null;
+                btn.setAlpha(0.7);
+            });
+            
+            return btn;
         };
 
-        up.on('pointerdown', handleTouch(Phaser.UP));
-        down.on('pointerdown', handleTouch(Phaser.DOWN));
-        left.on('pointerdown', handleTouch(Phaser.LEFT));
-        right.on('pointerdown', handleTouch(Phaser.RIGHT));
+        // Posicionamiento relativo a la pantalla
+        const baseY = height - controlSize * 1.5;
+        createButton(padding + controlSize, baseY, 180, Phaser.LEFT); // Izquierda
+        createButton(padding + controlSize * 3, baseY, 0, Phaser.RIGHT); // Derecha
+        createButton(padding + controlSize * 2, baseY - controlSize, -90, Phaser.UP); // Arriba
+        createButton(padding + controlSize * 2, baseY + controlSize, 90, Phaser.DOWN); // Abajo
 
-        // Añadir feedback táctil
-        [up, down, left, right].forEach(btn => {
-            btn.on('pointerover', () => btn.setAlpha(0.8));
-            btn.on('pointerout', () => btn.setAlpha(1));
+        // Manejo de toques múltiples
+        this.input.on('pointermove', (pointer) => {
+            if (!player.active || !pointer.isDown) return;
+            
+            const touchAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(
+                player.sprite.x, player.sprite.y,
+                pointer.worldX, pointer.worldY
+            ));
+            
+            currentTouch = Math.round(touchAngle / 90) * 90;
         });
     }
 }
