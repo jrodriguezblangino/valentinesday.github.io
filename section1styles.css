@@ -10,36 +10,68 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    touch-action: none;
 }
 
 #game-container {
     position: relative;
-    width: 100%;
-    height: 100vh;
+    width: 95vw;
+    height: 95vh;
     max-width: 800px;
     max-height: 625px;
     margin: auto;
     overflow: hidden;
     touch-action: none;
+    aspect-ratio: 800/625;
+    
+    /* Nueva propiedad para centrado absoluto */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 canvas {
     display: block;
-    margin: auto;
-    touch-action: none;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    image-rendering: crisp-edges;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     #game-container {
-        transform: none;
-        max-width: 100vw;
+        width: 100vw;
+        height: calc(100vw * (625/800));
         max-height: 100vh;
     }
     
     body {
-        padding: 0;
+        background-size: auto 100%;
         justify-content: center;
-        touch-action: none;
+        align-items: flex-start;
+        padding-top: 2vh;
+    }
+}
+
+@media (max-height: 625px) {
+    #game-container {
+        height: 100vh;
+        width: calc(100vh * (800/625));
+        max-width: 100vw;
+    }
+    
+    body {
+        background-size: cover;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 360px) and (orientation: portrait) {
+    #game-container {
+        width: 95vw !important;
+        height: calc(95vw * (625/800)) !important;
     }
 }
 
@@ -56,120 +88,17 @@ canvas {
 
 @media (max-height: 600px) {
     #game-container {
-        max-height: 90vh;
+        height: 90vh !important;
+        width: calc(90vh * (800/625)) !important;
     }
 }
 
-@media (max-width: 360px) {
-  #game-container {
-    transform: scale(0.65);
-    margin: 0;
-    padding: 5px;
-  }
-
-  .game-controls button {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    margin: 0 2px;
-    min-width: 60px; /* Ancho mínimo para legibilidad */
-  }
-
-  .power-up {
-    width: 25px !important;
-    height: 25px !important;
-  }
-
-  .game-dialog {
-    width: 95vw !important;
-    padding: 10px;
-    font-size: 0.9rem; /* Texto más compacto */
-  }
-
-  /* Nuevo: Ajuste para modo retrato */
-  @media (orientation: portrait) {
-    #game-container {
-      transform: scale(0.7) translateY(-5%);
-    }
-  }
-}
-
-/* Breakpoint tablet/móvil grande (coherente con styles.css) */
-@media (max-width: 768px) {
-  body {
-    background-size: 200% auto; /* Fondo más amplio */
-    background-position: 60% center; /* Enfoque en área importante */
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-  }
-
-  #game-container {
-    width: 90vw !important; /* Ancho relativo */
-    height: auto !important;
-    transform: scale(0.9) translate(-50%, -50%); /* Escalado controlado */
-    left: 50%;
-    top: 50%;
-    position: absolute;
-    margin: 0;
-  }
-}
-
-/* Breakpoint móvil medio (480px - mismo que styles.css) */
+/* Mantener solo estos media queries esenciales */
 @media (max-width: 480px) {
-  body {
-    background-size: 250% auto;
-    background-position: 70% center;
-  }
-
-  #game-container {
-    width: 95vw !important;
-    transform: scale(0.8) translate(-50%, -50%);
-    padding: 5px;
-  }
-
-  /* Ajustes para controles táctiles */
-  .game-controls button {
-    min-width: 65px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Breakpoint móvil pequeño (360px - igual que styles.css) */
-@media (max-width: 360px) {
-  body {
-    background-size: 300% auto;
-    background-position: 75% center;
-  }
-
-  #game-container {
-    transform: scale(0.7) translate(-50%, -45%); /* Ajuste vertical fino */
-    width: 100vw !important;
-  }
-
-  /* Optimización de elementos de UI */
-  .game-ui {
-    padding: 5px;
-    gap: 8px;
-  }
-
-  .score-board {
-    font-size: 1rem;
-    padding: 4px 8px;
-  }
-}
-
-/* Ajuste especial para orientación horizontal */
-@media (max-width: 480px) and (orientation: landscape) {
-  #game-container {
-    transform: scale(0.65) translate(-50%, -50%);
-    top: 55%;
-  }
-  
-  body {
-    background-size: 180% auto;
-    background-position: 50% 30%;
-  }
+    #game-container {
+        width: 95vw !important;
+        height: calc(95vw * (625/800)) !important;
+    }
 }
 
 .game-controls {
