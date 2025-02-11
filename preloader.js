@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Agregar efecto de sonido
             const explosionSound = new Audio('./assets/sounds/cinematic-boom-171285.mp3');
-            explosionSound.volume = 0.3; // Ajustar volumen
+            explosionSound.volume = 0.8; // Ajustar volumen
             explosionSound.play();
 
             await new Promise(resolve => setTimeout(resolve, 1500));
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).catch(error => {
                 console.error('Error reproducción:', error);
                 // Fallback
-                setTimeout(() => window.location.href = 'homepage.html', 24000);
+                setTimeout(() => window.location.href = 'homepage.html', 21000);
             });
         }
     });

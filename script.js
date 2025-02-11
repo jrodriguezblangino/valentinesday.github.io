@@ -1,6 +1,9 @@
 const typeSound = document.getElementById('type-sound');
+typeSound.volume = 0.8; // Ajustar volumen al 80%
 const enterSound = document.getElementById('enter-sound');
+enterSound.volume = 0.8; // Ajustar volumen al 80%
 const music = document.getElementById('background-music');
+
 
 async function typeWriter(element, text, speed = 100) {
     return new Promise(resolve => {

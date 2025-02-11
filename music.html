@@ -7,13 +7,13 @@
     <audio id="background-music" src="./assets/sounds/Yo tengo un pecado nuevo.mp3" loop></audio>
     <script>
         const music = document.getElementById('background-music');
-        music.volume = 0.4; // 30% de volumen (rango 0-1)
+        music.volume = 0.7; // 30% de volumen (rango 0-1)
         
         // Restaurar el tiempo de reproducción guardado
         const savedTime = localStorage.getItem('musicTime');
         if (savedTime) {
             music.currentTime = parseFloat(savedTime);
-            music.volume = 0.4; // Asegurar volumen bajo al restaurar
+            music.volume = 0.7; // Asegurar volumen bajo al restaurar
         }
 
         // Guardar el tiempo de reproducción cada segundo
@@ -25,9 +25,18 @@
 
         // Manejar mensajes desde la página principal
         window.addEventListener('message', function(e) {
-            if (e.data === 'play' && music.paused) {
-                music.volume = 0.4; // Volumen bajo al iniciar desde botón
-                music.play();
+            if (e.data === 'play') {
+                // Forzar contexto de audio en móviles
+                if (music.paused) {
+                    music.play().then(() => {
+                        music.volume = 0.7;
+                    }).catch(error => {
+                        // Manejar políticas de autoplay
+                        document.addEventListener('click', () => {
+                            music.play();
+                        }, { once: true });
+                    });
+                }
             }
         });
 

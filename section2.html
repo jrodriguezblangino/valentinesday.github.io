@@ -7,6 +7,7 @@
   <title>Video Section</title>
   <link rel="stylesheet" href="stylesslider.css">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
   <div class="comic-container">
@@ -47,4 +48,16 @@
 
   <script src="scriptslider.js"></script>
 </body>
+<script>
+  // Forzar contexto de audio al hacer touch en móviles
+  document.addEventListener('DOMContentLoaded', () => {
+    const touchHandler = () => {
+      if (document.getElementById('music-player')) {
+        document.getElementById('music-player').contentWindow.postMessage('play', '*');
+      }
+      document.removeEventListener('touchstart', touchHandler);
+    };
+    document.addEventListener('touchstart', touchHandler);
+  });
+</script>
 </html>

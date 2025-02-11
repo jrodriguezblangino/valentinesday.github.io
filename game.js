@@ -486,14 +486,14 @@ function hideWinMessage() {
 function createTouchControls() {
     if (!this.game.device.os.desktop) {
         const controlSize = 40;
-        const verticalPosition = height - 70;
+        const verticalPosition = height - 57;
         
         const createButton = (x, direction) => {
             const btn = this.add.text(x, verticalPosition, getArrowSymbol(direction), {
                 fontSize: '24px',
-                fill: '#ffffff',
+                fill: '#ff69b4',
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                padding: { x: 10, y: 5 },
+                padding: { x: 10, y: 10 },
                 borderRadius: 20
             })
             .setInteractive()
@@ -522,11 +522,11 @@ function createTouchControls() {
         };
 
         // Posicionamiento horizontal centrado
-        const startX = width/2 - (controlSize * 2 + 15);
+        const startX = width/2 - (controlSize * 2 + 10);
         createButton(startX, Phaser.LEFT);
-        createButton(startX + controlSize + 15, Phaser.UP);
-        createButton(startX + (controlSize + 15) * 2, Phaser.DOWN);
-        createButton(startX + (controlSize + 15) * 3, Phaser.RIGHT);
+        createButton(startX + controlSize + 10, Phaser.UP);
+        createButton(startX + (controlSize + 10) * 2, Phaser.DOWN);
+        createButton(startX + (controlSize + 10) * 3, Phaser.RIGHT);
 
         // Manejo de toques múltiples
         this.input.on('pointermove', (pointer) => {
@@ -542,14 +542,16 @@ function createTouchControls() {
     }
 }
 
-// Función auxiliar para símbolos de flecha
+// Modificar la función getArrowSymbol
 function getArrowSymbol(direction) {
-    return { 
-        [Phaser.LEFT]: '←', 
-        [Phaser.RIGHT]: '→', 
-        [Phaser.UP]: '↑', 
-        [Phaser.DOWN]: '↓' 
-    }[direction];
+    const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const symbols = {
+        [Phaser.LEFT]: isApple ? '⬅️' : '←',
+        [Phaser.RIGHT]: isApple ? '➡️' : '→', 
+        [Phaser.UP]: isApple ? '⬆️' : '↑',
+        [Phaser.DOWN]: isApple ? '⬇️' : '↓'
+    };
+    return symbols[direction];
 }
 
       

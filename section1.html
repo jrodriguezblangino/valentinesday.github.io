@@ -7,8 +7,21 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.12/dist/phaser.js"></script>
     <script src="game.js" type="module"></script>
     <link rel="stylesheet" href="section1styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <div id="game-container"></div>
 </body>
+<script>
+    // Forzar contexto de audio al hacer touch en móviles
+    document.addEventListener('DOMContentLoaded', () => {
+      const touchHandler = () => {
+        if (document.getElementById('music-player')) {
+          document.getElementById('music-player').contentWindow.postMessage('play', '*');
+        }
+        document.removeEventListener('touchstart', touchHandler);
+      };
+      document.addEventListener('touchstart', touchHandler);
+    });
+  </script>
 </html>
