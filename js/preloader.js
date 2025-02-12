@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).catch(error => {
                 console.error('Error reproducción:', error);
                 // Fallback
-                setTimeout(() => window.location.href = '../pages/homepage.html', 21000);
+                setTimeout(() => window.location.href = '/pages/homepage.html', 21000);
             });
         }
     });
