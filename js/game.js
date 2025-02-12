@@ -1,5 +1,5 @@
-import Player from "../js/player.js";
-import Ghost from "../js/ghost.js";
+import Player from "/js/player.js";
+import Ghost from "/js/ghost.js";
         
 let width = 800;
 let height = 625;
@@ -41,10 +41,10 @@ let graphics;
 let scoreText;
 let livesImage=[];
 let tiles = "pacman-tiles";
-let spritesheet = '../assets/images/pacmansprites.png';
-let spritesheetPath = '../assets/images/pacmansprites.png';
-let tilesPath = '../assets/images/background.png';
-let mapPath = '../assets/levels/codepen-level.json';
+let spritesheet = '/assets/images/pacmansprites.png';
+let spritesheetPath = '/assets/images/pacmansprites.png';
+let tilesPath = '/assets/images/background.png';
+let mapPath = '/assets/levels/codepen-level.json';
 let Animation= {
     Player : {
         Eat: 'player-eat',
@@ -83,10 +83,10 @@ function preload ()
     this.load.spritesheet(spritesheet, spritesheetPath, { frameWidth: gridSize, frameHeight: gridSize });
     this.load.tilemapTiledJSON("map", mapPath);
     this.load.image(tiles, tilesPath);
-    this.load.image("pill", "../assets/images/pac man pill/spr_pill_0.png");
-    this.load.image("lifecounter", "../assets/images/pac man life counter/spr_lifecounter_0.png");
+    this.load.image("pill", "/assets/images/pac man pill/spr_pill_0.png");
+    this.load.image("lifecounter", "/assets/images/pac man life counter/spr_lifecounter_0.png");
     if (!this.game.device.os.desktop) {
-        this.load.image('arrow', '../assets/images/ui/arrow.png');
+        this.load.image('arrow', '/assets/images/ui/arrow.png');
     }
 }
 

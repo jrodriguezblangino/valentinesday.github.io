@@ -42,7 +42,7 @@ let livesImage=[];
 let tiles = "pacman-tiles";
 let spritesheet = 'pacman-spritesheet';
 let spritesheetPath = 'assets/images/pacmansprites.png';
-let tilesPath = '../assets/images/background.png';
+let tilesPath = '/assets/images/background.png';
 let mapPath = 'assets/levels/codepen-level.json';
 let Animation= {
     Player : {

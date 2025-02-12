@@ -54,7 +54,7 @@ function shuffle(array) {
 }
 
 function getRandomCardBack() {
-  return `../assets/images/cards/${cardBacks[Math.floor(Math.random() * cardBacks.length)]}`;
+  return `/assets/images/cards/${cardBacks[Math.floor(Math.random() * cardBacks.length)]}`;
 }
 
 function createCards() {
@@ -67,7 +67,7 @@ function createCards() {
     const front = document.createElement('div');
     front.classList.add('front');
     const img = document.createElement('img');
-    img.src = `../assets/images/cards/${card}.jpg`;
+    img.src = `/assets/images/cards/${card}.jpg`;
     front.appendChild(img);
     
     const back = document.createElement('div');
@@ -140,7 +140,7 @@ function createMatchEffect(card) {
   
   effect.style.left = `${rect.left}px`;
   effect.style.top = `${rect.top}px`;
-  effect.style.background = `url('../assets/images/cards/transparent-dance.gif') no-repeat center/cover`;
+  effect.style.background = `url('/assets/images/cards/transparent-dance.gif') no-repeat center/cover`;
   
   document.body.appendChild(effect);
   return effect;
