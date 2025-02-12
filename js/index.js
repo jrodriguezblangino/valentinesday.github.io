@@ -41,9 +41,9 @@ let scoreText;
 let livesImage=[];
 let tiles = "pacman-tiles";
 let spritesheet = 'pacman-spritesheet';
-let spritesheetPath = 'assets/images/pacmansprites.png';
-let tilesPath = '/assets/images/background.png';
-let mapPath = 'assets/levels/codepen-level.json';
+let spritesheetPath = '/valentinesday.github.io/assets/images/pacmansprites.png';
+let tilesPath = '/valentinesday.github.io/assets/images/background.png';
+let mapPath = '/valentinesday.github.io/assets/levels/codepen-level.json';
 let Animation= {
     Player : {
         Eat: 'player-eat',
@@ -78,8 +78,8 @@ function preload ()
     this.load.spritesheet(spritesheet, spritesheetPath, { frameWidth: gridSize, frameHeight: gridSize });
     this.load.tilemapTiledJSON("map", mapPath);
     this.load.image(tiles, tilesPath);
-    this.load.image("pill", "assets/images/pac man pill/spr_pill_0.png");
-    this.load.image("lifecounter", "assets/images/pac man life counter/spr_lifecounter_0.png");
+    this.load.image("pill", "/valentinesday.github.io/assets/images/pac man pill/spr_pill_0.png");
+    this.load.image("lifecounter", "/valentinesday.github.io/assets/images/pac man life counter/spr_lifecounter_0.png");
 }
 
 function create ()
