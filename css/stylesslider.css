@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    background-image: url('/assets/images/comic/comic-background2.jpg');
+    background-image: url('/valentinesday.github.io/assets/images/comic/comic-background2.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -16,7 +16,7 @@ body {
     position: relative;
     width: 800px;
     height: 600px;
-    background-image: url('/assets/images/comic/comic-background.jpg');
+    background-image: url('/valentinesday.github.io/assets/images/comic/comic-background.jpg');
     background-size: cover;
     background-position: center;
     border: 5px solid #000;
@@ -116,7 +116,7 @@ body {
 }
 
 #start-screen {
-    background-image: url('/assets/images/comic/comic-background.jpg');
+    background-image: url('/valentinesday.github.io/assets/images/comic/comic-background.jpg');
     background-size: cover;
     background-position: center;
     border: 5px solid #000;
@@ -204,7 +204,7 @@ body {
 }
 
 #end-screen {
-    background-image: url('/assets/images/comic/comic-background.jpg');
+    background-image: url('/valentinesday.github.io/assets/images/comic/comic-background.jpg');
     background-size: cover;
     background-position: center;
     border: 5px solid #000;

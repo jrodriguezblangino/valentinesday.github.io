@@ -1,5 +1,5 @@
-import Player from "/js/player.js";
-import Ghost from "/js/ghost.js";
+import Player from "/valentinesday.github.io/js/player.js";
+import Ghost from "/valentinesday.github.io/js/ghost.js";
         
 let width = 800;
 let height = 625;
