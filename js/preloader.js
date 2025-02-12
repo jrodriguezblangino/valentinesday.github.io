@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fire.style.display = 'block';
             
             // Agregar efecto de sonido
-            const explosionSound = new Audio('assets/sounds/cinematic-boom-171285.mp3');
+            const explosionSound = new Audio('../assets/sounds/cinematic-boom-171285.mp3');
             explosionSound.volume = 0.8; // Ajustar volumen
             explosionSound.play();
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Crear nuevo elemento video dinámicamente
             const newVideo = document.createElement('video');
-            newVideo.src = 'assets/sounds/Corazon.mp4';
+            newVideo.src = '../assets/sounds/Corazon.mp4';
             newVideo.className = 'final-heart';
             newVideo.style.width = '80%'; // Tamaño visible
             newVideo.style.maxWidth = '400px'; // Límite máximo
@@ -67,12 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Reproducción iniciada');
                 setTimeout(() => {
                     newVideo.remove();
-                    window.location.href = 'pages/homepage.html';
+                    window.location.href = '../pages/homepage.html';
                 }, 18000);
             }).catch(error => {
                 console.error('Error reproducción:', error);
                 // Fallback
-                setTimeout(() => window.location.href = 'pages/homepage.html', 21000);
+                setTimeout(() => window.location.href = '../pages/homepage.html', 21000);
             });
         }
     });

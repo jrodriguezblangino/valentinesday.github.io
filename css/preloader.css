@@ -6,12 +6,12 @@
 
 /* Add cursor to html and body elements */
 html, body {
-    cursor: url('assets/images/custom-cursor.png'), auto;
+    cursor: url('../assets/images/custom-cursor.png'), auto;
 }
 
 /* Update heart cursor */
 .heart {
-    cursor: url('assets/images/tap.png'), pointer;
+    cursor: url('../assets/images/tap.png'), pointer;
 }
 
 /* Keep existing other CSS rules */
@@ -37,7 +37,7 @@ body {
     width: 100px;
     opacity: 0;
     transition: opacity 1s ease-in-out;
-    cursor: url('assets/images/tap.png'), pointer;
+    cursor: url('../assets/images/tap.png'), pointer;
 }
 
 .fire-effect {
@@ -73,7 +73,7 @@ body {
 }
 
 .clickable {
-    cursor: url('assets/images/tap.png'), pointer !important;
+    cursor: url('../assets/images/tap.png'), pointer !important;
     transition: transform 0.3s ease;
 }
 
