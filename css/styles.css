@@ -13,7 +13,7 @@ body {
   font-family: 'Raleway', sans-serif;
   text-align: center;
   overflow: hidden;
-  background-image: url('./assets/comic/homepage.background.jpg');
+  background-image: url('../assets/images/comic/homepage.background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -205,29 +205,29 @@ body::before {
 /* Nuevo breakpoint para pantallas muy pequeñas */
 @media (max-width: 360px) {
   .photos-container {
-    max-width: calc(100vw - 30px); /* Reducción adicional de 10px */
-    gap: 10px; /* Menor espacio entre fotos */
-    padding: 20px 5px; /* Padding horizontal mínimo */
+    max-width: calc(100vw - 30px);
+    gap: 10px; 
+    padding: 20px 5px; 
   }
 
   .polaroid {
-    margin: 0 3px; /* Margen lateral reducido */
-    padding: 6px 6px 25px 6px; /* Padding interno ajustado */
+    margin: 0 3px;
+    padding: 6px 6px 25px 6px; 
   }
 
   .polaroid img {
-    width: 70px; /* Reducción adicional de 12.5% */
+    width: 70px; 
     height: 70px; /* Mantener relación 1:1 */
     min-width: 70px; /* Prevenir compresión */
   }
 
   #typewriter-text {
-    top: 44%; /* Mayor ajuste vertical */
-    font-size: 1.3rem; /* Tamaño reducido para pantallas muy pequeñas */
+    top: 44%; 
+    font-size: 1.3rem; /
   }
 
   #typewriter-text-2 {
-    margin: 0 3%; /* Margen más ajustado */
-    font-size: 1rem; /* Tamaño consistente con otros breakpoints */
+    margin: 0 3%;
+    font-size: 1rem;
   }
 }

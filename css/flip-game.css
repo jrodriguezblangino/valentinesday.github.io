@@ -10,7 +10,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url('./assets/comic/flip-game-background.jpg');
+  background-image: url('../assets/images/comic/flip-game-background.jpg');
   background-size: cover;
   background-position: center;
   min-height: 100vh;

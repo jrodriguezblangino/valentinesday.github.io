@@ -1,5 +1,5 @@
-import Player  from "./player.js";
-import Ghost  from "./ghost.js";
+import Player from "../js/player.js";
+import Ghost from "../js/ghost.js";
         
 let width = 800;
 let height = 625;
@@ -7,8 +7,9 @@ let gridSize = 32;
 let offset=parseInt(gridSize/2);
 let config = {
     type: Phaser.AUTO,
-    width: width,
-    height: height,
+    parent: 'game-container',
+    width: 800,
+    height: 625,
     physics: {
         default: 'arcade',
         arcade: {
@@ -40,10 +41,10 @@ let graphics;
 let scoreText;
 let livesImage=[];
 let tiles = "pacman-tiles";
-let spritesheet = 'pacman-spritesheet';
-let spritesheetPath = 'assets/images/pacmansprites.png';
-let tilesPath = 'assets/images/background.png';
-let mapPath = 'assets/levels/codepen-level.json';
+let spritesheet = '../assets/images/pacmansprites.png';
+let spritesheetPath = '../assets/images/pacmansprites.png';
+let tilesPath = '../assets/images/background.png';
+let mapPath = '../assets/levels/codepen-level.json';
 let Animation= {
     Player : {
         Eat: 'player-eat',
@@ -73,13 +74,20 @@ let Animation= {
     }
 };
 
+let gameOverText;
+let restartText;
+let currentTouch = null;
+
 function preload ()
 {
     this.load.spritesheet(spritesheet, spritesheetPath, { frameWidth: gridSize, frameHeight: gridSize });
     this.load.tilemapTiledJSON("map", mapPath);
     this.load.image(tiles, tilesPath);
-    this.load.image("pill", "assets/images/pac man pill/spr_pill_0.png");
-    this.load.image("lifecounter", "assets/images/pac man life counter/spr_lifecounter_0.png");
+    this.load.image("pill", "../assets/images/pac man pill/spr_pill_0.png");
+    this.load.image("lifecounter", "../assets/images/pac man life counter/spr_lifecounter_0.png");
+    if (!this.game.device.os.desktop) {
+        this.load.image('arrow', '../assets/images/ui/arrow.png');
+    }
 }
 
 function create ()
@@ -149,11 +157,12 @@ function create ()
     
     let spawnPoint = map.findObject("Objects", obj => obj.name === "Player");  
     let position = new Phaser.Geom.Point(spawnPoint.x + offset, spawnPoint.y - offset);
-    player = new Player(this, position, Animation.Player, function() {
-        if(player.life <= 0) {
-            newGame();
-        }
-        else {
+    player = new Player(this, position, Animation.Player, () => {
+        console.log('DieCallback called, lives:', player.life);
+        if (player.life <= 0) {
+            console.log('Showing game over');
+            showGameOver.call(this);
+        } else {
             respawn();
         }
     });
@@ -190,22 +199,26 @@ function create ()
     this.physics.add.overlap(player.sprite, pills, function(sprite, pill) {        
         pill.disableBody(true, true);
         pillsAte++;
-        player.score+=10;
-        if(pillsCount==pillsAte) {
+        player.score += 10;
+        scoreText.setText('Score: ' + player.score);
+        
+        checkWinCondition.call(this);
+        
+        if(pillsCount == pillsAte) {
             reset();
         }
     }, null, this);
 
     this.physics.add.overlap(player.sprite, ghostsGroup, function(sprite, ghostSprite) {
-        if(player.active) {
+        if (player.active) {
             player.die();
-            for(let ghost of ghosts) {
+            for (let ghost of ghosts) {
                 ghost.freeze();
             }   
         }
     }, null, this);
 
-    cursors= this.input.keyboard.createCursorKeys();
+    cursors = this.input.keyboard.createCursorKeys();
 
     graphics = this.add.graphics();
 
@@ -214,6 +227,44 @@ function create ()
     for (let i =  0; i < player.life; i++) {
         livesImage.push(this.add.image(700 + (i * 25), 605, 'lifecounter'));
     }
+
+    this.controls = this.add.group();
+    if (!this.game.device.os.desktop) {
+        this.input.addPointer(3);
+        createTouchControls.call(this);
+        this.input.keyboard.enabled = false;
+    }
+
+    this.input.on('pointerdown', () => {
+        if (!this.game.device.os.desktop) {
+            return;
+        }
+        this.input.keyboard.enabled = true;
+    });
+
+    function checkWinCondition() {
+        if (player.score >= 1760) {
+            showWinMessage.call(this);
+        }
+    }
+
+    this.game.device.os.desktop = this.game.device.os.desktop || /Mac|Win/.test(navigator.platform);
+
+    // Escalado responsivo para Phaser 3.12
+    const resizeGame = () => {
+        const canvas = document.querySelector('canvas');
+        const container = document.getElementById('game-container');
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+        
+        const scale = Math.min(width / 800, height / 625);
+        canvas.style.width = `${800 * scale}px`;
+        canvas.style.height = `${625 * scale}px`;
+        canvas.style.margin = 'auto';
+    };
+    
+    window.addEventListener('resize', resizeGame);
+    resizeGame();
 }
 
 function respawn() {
@@ -226,26 +277,46 @@ function respawn() {
 function reset() {
     respawn();
     for (let child of pills.getChildren()) {
-            child.enableBody(false, child.x, child.y, true, true);
-        }
-    pillsAte=0;
-    
+        child.enableBody(false, child.x, child.y, true, true);
+    }
+    pillsAte = 0;
 }
 
 function newGame() {
+    hideGameOver();
     reset();
-    player.life=3;
-    player.score=0;
+    player.life = 3;
+    player.score = 0;
+    player.active = true;
+    player.playing = true;
     for (let i = 0; i < player.life; i++) {
         let image = livesImage[i];
-        if(image) {
-            image.alpha=1;
+        if (image) {
+            image.alpha = 1;
         }
     }
 }
 
 function update()
 {
+    let direction = Phaser.NONE;
+
+    if (this.game.device.os.desktop) {
+        if (cursors.left.isDown) direction = Phaser.LEFT;
+        else if (cursors.right.isDown) direction = Phaser.RIGHT;
+        else if (cursors.up.isDown) direction = Phaser.UP;
+        else if (cursors.down.isDown) direction = Phaser.DOWN;
+    }
+
+    switch(currentTouch) {
+        case 180: direction = Phaser.LEFT; break;
+        case 0: direction = Phaser.RIGHT; break;
+        case -90: direction = Phaser.UP; break;
+        case 90: direction = Phaser.DOWN; break;
+    }
+
+    player.setTurn(direction);
+
     player.setDirections(getDirection(map, layer1, player.sprite));
 
     if(!player.playing) {
@@ -264,34 +335,13 @@ function update()
         ghost.setTurningPoint(getTurningPoint(map, ghost.sprite));
     }
 
-    if (cursors.left.isDown)
-    {
-        player.setTurn(Phaser.LEFT);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setTurn(Phaser.RIGHT);
-    }   
-    else if (cursors.up.isDown)
-    {
-        player.setTurn(Phaser.UP);
-    }
-    else if (cursors.down.isDown)
-    {
-        player.setTurn(Phaser.DOWN);
-    }
-    else
-    {
-        player.setTurn(Phaser.NONE);   
-    }
-
     player.update();  
 
     for(let ghost of ghosts) {
         ghost.update();
     }
 
-    scoreText.setText('Score: '+player.score);
+    scoreText.setText('Puntaje de mi ratita: '+player.score);
 
     for (let i = player.life; i < 3; i++) {
         let image = livesImage[i];
@@ -308,9 +358,6 @@ function update()
             player.sprite.setPosition(0 - offset, player.sprite.y);
         }
     }
-    
-
-    //drawDebug();
 }
 
 function drawDebug() {
@@ -354,5 +401,157 @@ function getTurningPoint(map, sprite) {
     return turningPoint;
 }
 
+function showGameOver() {
+    gameOverText = this.add.text(width / 2, height / 2 - 50, 'Jeu terminé', {
+        fontSize: '64px',
+        fill: '#ff0000',
+        align: 'center'
+    }).setOrigin(0.5);
+
+    restartText = this.add.text(width / 2, height / 2 + 80, 
+        'Ce qui ne se termine jamais,\ncest mon amour pour toi!\nAppuie pour recommencer', {
+        fontSize: '32px',
+        fill: '#ffffff',
+        align: 'center',
+        lineSpacing: 10
+    }).setOrigin(0.5).setInteractive();
+
+    restartText.on('pointerdown', () => {
+        hideGameOver();
+        newGame.call(this);
+    });
+
+    this.input.keyboard.on('keydown-ENTER', () => {
+        hideGameOver();
+        newGame.call(this);
+    });
+}
+
+function hideGameOver() {
+    if (gameOverText) {
+        gameOverText.destroy();
+        gameOverText = null;
+    }
+    if (restartText) {
+        restartText.destroy();
+        restartText = null;
+    }
+}
+
+function showWinMessage() {
+    player.active = false;
+    player.playing = false;
+
+    // Detener fantasmas
+    for (let ghost of ghosts) {
+        ghost.freeze();
+    }
+
+    gameOverText = this.add.text(width / 2, height / 2 - 50, 'Tu as gagné le jeu!', {
+        fontSize: '64px',
+        fill: '#00ff00',
+        align: 'center'
+    }).setOrigin(0.5);
+
+    restartText = this.add.text(width / 2, height / 2 + 80, 
+        'Mais pas seulement,\ntu as aussi gagné mon cœu ❤️', {
+        fontSize: '32px',
+        fill: '#ffffff',
+        align: 'center',
+        lineSpacing: 10
+    }).setOrigin(0.5).setInteractive();
+
+    restartText.on('pointerdown', () => {
+        hideWinMessage();
+        newGame.call(this);
+    });
+
+    this.input.keyboard.on('keydown-ENTER', () => {
+        hideWinMessage();
+        newGame.call(this);
+    });
+}
+
+function hideWinMessage() {
+    if (gameOverText) {
+        gameOverText.destroy();
+        gameOverText = null;
+    }
+    if (restartText) {
+        restartText.destroy();
+        restartText = null;
+    }
+}
+
+function createTouchControls() {
+    if (!this.game.device.os.desktop) {
+        const controlSize = 40;
+        const verticalPosition = height - 57;
+        
+        const createButton = (x, direction) => {
+            const btn = this.add.text(x, verticalPosition, getArrowSymbol(direction), {
+                fontSize: '24px',
+                fill: '#ff69b4',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                padding: { x: 10, y: 10 },
+                borderRadius: 20
+            })
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+            btn.on('pointerdown', () => {
+                if (player.active) {
+                    currentTouch = direction;
+                    btn.setAlpha(0.9);
+                    player.setTurn(direction);
+                }
+            });
+            
+            btn.on('pointerup', () => {
+                currentTouch = null;
+                btn.setAlpha(0.7);
+            });
+            
+            btn.on('pointerout', () => {
+                currentTouch = null;
+                btn.setAlpha(0.7);
+            });
+            
+            return btn;
+        };
+
+        // Posicionamiento horizontal centrado
+        const startX = width/2 - (controlSize * 2 + 10);
+        createButton(startX, Phaser.LEFT);
+        createButton(startX + controlSize + 10, Phaser.UP);
+        createButton(startX + (controlSize + 10) * 2, Phaser.DOWN);
+        createButton(startX + (controlSize + 10) * 3, Phaser.RIGHT);
+
+        // Manejo de toques múltiples
+        this.input.on('pointermove', (pointer) => {
+            if (!player.active || !pointer.isDown) return;
+            
+            const touchAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(
+                player.sprite.x, player.sprite.y,
+                pointer.worldX, pointer.worldY
+            ));
+            
+            currentTouch = Math.round(touchAngle / 90) * 90;
+        });
+    }
+}
+
+// Modificar la función getArrowSymbol
+function getArrowSymbol(direction) {
+    const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const symbols = {
+        [Phaser.LEFT]: isApple ? '⬅️' : '←',
+        [Phaser.RIGHT]: isApple ? '➡️' : '→', 
+        [Phaser.UP]: isApple ? '⬆️' : '↑',
+        [Phaser.DOWN]: isApple ? '⬇️' : '↓'
+    };
+    return symbols[direction];
+}
 
       
