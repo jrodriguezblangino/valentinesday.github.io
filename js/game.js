@@ -83,7 +83,7 @@ function preload ()
     this.load.spritesheet(spritesheet, spritesheetPath, { frameWidth: gridSize, frameHeight: gridSize });
     this.load.tilemapTiledJSON("map", mapPath);
     this.load.image(tiles, tilesPath);
-    this.load.image("pill", "/valentinesday.github.io/assets/images/pac_man_life_counter/spr_lifecounter_0.png");
+    this.load.image("pill", "/valentinesday.github.io/assets/images/pac_man_pill/spr_pill_0.png");
     this.load.image("lifecounter", "/valentinesday.github.io/assets/images/pac_man_life_counter/spr_lifecounter_0.png");
     if (!this.game.device.os.desktop) {
         this.load.image('arrow', '/valentinesday.github.io/assets/images/ui/arrow.png');
